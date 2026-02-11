@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu</title>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Poppins:wght@400;600;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --accent: #ff69b4; --glass: rgba(255, 255, 255, 0.12); }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Poppins', sans-serif; background: radial-gradient(circle, #1a0033, #000000); overflow: hidden; color: white; }
+
+        /* CAMERA SENSOR */
+        #video-container { position: fixed; top: 10px; right: 10px; width: 80px; height: 60px; border-radius: 8px; overflow: hidden; z-index: 1000; border: 1px solid rgba(255,255,255,0.2); }
+        video { transform: scaleX(-1); width: 100%; height: 100%; object-fit: cover; }
+        #voice-indicator { position: fixed; bottom: 20px; width: 100%; text-align: center; z-index: 200; color: var(--accent); font-weight: bold; }
+
+        /* LIPS */
+        #mouth-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 500; display: flex; flex-direction: column; cursor: pointer; }
+        .lip-half { flex: 1; position: relative; overflow: hidden; transition: transform 1s ease-in-out; background: #0c001f; }
+        .lip-svg { position: absolute; width: 100%; height: 100%; fill: #1a0033; filter: drop-shadow(0 0 20px #a91079); }
+        .lip-top { bottom: 0; } .lip-bottom { top: 0; }
+        #mouth-container.open .lip-half.top { transform: translateY(-100%); }
+        #mouth-container.open .lip-half.bottom { transform: translateY(100%); }
+
+        /* UI CARDS */
+        .container { position: relative; z-index: 10; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .glass-card { background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; padding: 25px; width: 420px; text-align: center; max-height: 80vh; overflow-y: auto; }
+        
+        .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 15px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; }
+        .price { color: #ffd700; font-weight: bold; }
+        .btn { background: rgba(255,255,255,0.1); border: 1px solid white; color: white; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        .add-btn { background: #2ecc71; border: none; padding: 5px 10px; border-radius: 5px; color: white; cursor: pointer; }
+        .total-panel { margin-top: 20px; font-size: 1.4rem; color: #2ecc71; font-weight: bold; border-top: 2px solid white; padding-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="video-container"><video id="input-video" playsinline></video></div>
+    <div id="voice-indicator">Open Mouth to Start</div>
+
+    <div id="mouth-container" onclick="unlock()">
+        <div class="lip-half top"><svg class="lip-svg lip-top" viewBox="0 0 100 50" preserveAspectRatio="none"><path d="M0,50 Q25,0 50,20 Q75,0 100,50 L100,0 L0,0 Z" /></svg></div>
+        <div class="lip-half bottom"><svg class="lip-svg lip-bottom" viewBox="0 0 100 50" preserveAspectRatio="none"><path d="M0,0 Q50,60 100,0 L100,50 L0,50 Z" /></svg></div>
+    </div>
+
+    <div class="container">
+        <div class="glass-card">
+            <h1 id="title" style="font-family:'Lobster', cursive; font-size: 2.5rem; margin:0;">Tasty Mouth</h1>
+            <div id="display-area">
+                <div class="cat-grid">
+                    <button class="btn" onclick="render('veg')">🥗 VEG</button>
+                    <button class="btn" onclick="render('non-veg')">🍗 NON-VEG</button>
+                    <button class="btn" onclick="render('chinese')">🥟 CHINESE</button>
+                    <button class="btn" onclick="render('drinks')">🥤 DRINKS</button>
+                    <button class="btn" onclick="render('shake')">🍦 SHAKES</button>
+                    <button class="btn" onclick="showBill()">🛒 BILL</button>
+                </div>
+            </div>
+            <div id="live-total" class="total-panel">Total: ₹0</div>
+        </div>
+    </div>
+
+    <script>
+        let cart = [];
+        let mouthOpened = false;
+
+        const menuData = {
+            'veg': [['Paneer Tikka', 280], ['Veg Biryani', 220], ['Dal Makhani', 200]],
+            'non-veg': [['Butter Chicken', 350], ['Chicken Tikka', 300], ['Mutton Roast', 400]],
+            'chinese': [['Veg Noodles', 180], ['Chilli Chicken', 260], ['Manchurian', 190]],
+            'drinks': [['Fresh Lime Soda', 60], ['Masala Tea', 40], ['Coke', 50]],
+            'shake': [['Oreo Shake', 150], ['Mango Shake', 130]]
+        };
+
+        // --- VOICE RECOGNITION (FIXED AUTO-RESTART) ---
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.continuous = false; // False + manual restart = more stable
+        recognition.lang = 'en-IN';
+
+        recognition.onresult = (event) => {
+            const msg = event.results[0][0].transcript.toLowerCase();
+            document.getElementById('voice-indicator').innerText = "Heard: " + msg;
+
+            // Navigation Commands
+            if (msg.includes('non veg')) render('non-veg');
+            else if (msg.includes('veg')) render('veg');
+            else if (msg.includes('chinese')) render('chinese');
+            else if (msg.includes('drink')) render('drinks');
+            else if (msg.includes('shake')) render('shake');
+            else if (msg.includes('bill') || msg.includes('cart')) showBill();
+            else if (msg.includes('back') || msg.includes('home')) location.reload();
+
+            // Smart Add Commands
+            if (msg.includes('add')) {
+                Object.keys(menuData).forEach(cat => {
+                    menuData[cat].forEach(item => {
+                        if (msg.includes(item[0].toLowerCase())) {
+                            addToCart(item[0], item[1]);
+                        }
+                    });
+                });
+            }
+        };
+
+        // This restarts the mic every time it stops so it never "freezes"
+        recognition.onend = () => { if(mouthOpened) recognition.start(); };
+
+        function speak(t) { window.speechSynthesis.speak(new SpeechSynthesisUtterance(t)); }
+
+        function render(cat) {
+            document.getElementById('title').innerText = cat.toUpperCase();
+            let items = menuData[cat];
+            let html = items.map(i => `
+                <div class="item-row">
+                    <span>${i[0]} <br> <small class="price">₹${i[1]}</small></span>
+                    <button class="add-btn" onclick="addToCart('${i[0]}', ${i[1]})">+ ADD</button>
+                </div>
+            `).join('');
+            document.getElementById('display-area').innerHTML = html + `<button class="btn" style="width:100%; margin-top:15px;" onclick="location.reload()">← BACK</button>`;
+        }
+
+        function addToCart(name, price) {
+            cart.push({name, price});
+            const total = cart.reduce((s, i) => s + i.price, 0);
+            document.getElementById('live-total').innerText = "Total: ₹" + total;
+            speak("Added " + name);
+        }
+
+        function showBill() {
+            document.getElementById('title').innerText = "YOUR BILL";
+            let html = cart.map(i => `<div class="item-row"><span>${i.name}</span><span class="price">₹${i.price}</span></div>`).join('');
+            document.getElementById('display-area').innerHTML = html || "<p>Cart is empty</p>";
+            document.getElementById('display-area').innerHTML += `<button class="btn" style="width:100%; margin-top:15px;" onclick="location.reload()">NEW ORDER</button>`;
+        }
+
+        function unlock() {
+            if (mouthOpened) return;
+            mouthOpened = true;
+            document.getElementById('mouth-container').classList.add('open');
+            recognition.start();
+            speak("Welcome! Say a category like Veg or Non-Veg.");
+            setTimeout(() => { document.getElementById('mouth-container').style.display = 'none'; }, 1000);
+        }
+
+        const faceMesh = new FaceMesh({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}` });
+        faceMesh.setOptions({ refineLandmarks: true, minDetectionConfidence: 0.5 });
+        faceMesh.onResults((res) => {
+            if (!mouthOpened && res.multiFaceLandmarks) {
+                if ((res.multiFaceLandmarks[0][14].y - res.multiFaceLandmarks[0][13].y) > 0.07) unlock();
+            }
+        });
+        new Camera(document.getElementById('input-video'), { onFrame: async () => { await faceMesh.send({ image: document.getElementById('input-video') }); }, width: 640, height: 480 }).start();
+    </script>
+</body>
+</html>
