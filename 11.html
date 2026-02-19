@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Burnt Torn Scroll Registration</title>
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at center, #1a0f08, #000000);
+  font-family: 'Georgia', serif;
+}
+
+.scroll-wrapper {
+  position: relative;
+  width: 480px;
+  filter: drop-shadow(0 30px 50px rgba(0,0,0,0.9));
+  transition: transform 0.6s ease;
+}
+
+/* Wooden rolls */
+/* Wooden rolls */
+.roll-top, .roll-bottom {
+  height: 70px;
+  background: linear-gradient(to bottom, #7a4b1f, #4a2a12);
+  border-radius: 60px;
+  box-shadow: inset 0 10px 20px rgba(0,0,0,0.7);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f5deb3;
+  font-weight: bold;
+  letter-spacing: 3px;
+  font-size: 20px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+}
+
+.roll-top::after,
+.roll-bottom::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(0,0,0,0.2) 0px,
+    rgba(0,0,0,0.2) 2px,
+    transparent 2px,
+    transparent 6px
+  );
+  border-radius: 60px;
+  opacity: 0.4;
+}
+
+.roll-bottom {
+  margin-top: -25px;
+}
+
+/* Burnt parchment */
+.scroll {
+  position: relative;
+  background: radial-gradient(circle at center, #f5deb3 0%, #e0b96e 60%, #5a3a1b 100%);
+  border-left: 6px solid #2b160a;
+  border-right: 6px solid #2b160a;
+  overflow: hidden;
+  height: 0;
+  transition: height 1.2s ease;
+}
+
+.scroll::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at top left, rgba(0,0,0,0.9), transparent 40%),
+    radial-gradient(circle at top right, rgba(0,0,0,0.9), transparent 40%),
+    radial-gradient(circle at bottom left, rgba(0,0,0,0.9), transparent 40%),
+    radial-gradient(circle at bottom right, rgba(0,0,0,0.9), transparent 40%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.scroll::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -30px;
+  height: 60px;
+  background: #2b160a;
+  clip-path: polygon(
+    0% 20%, 8% 60%, 15% 30%, 22% 70%, 30% 40%,
+    38% 75%, 46% 35%, 55% 80%, 65% 45%,
+    75% 85%, 85% 50%, 92% 90%, 100% 60%,
+    100% 100%, 0% 100%
+  );
+  opacity: 0.9;
+}
+
+.content {
+  padding: 35px;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  color: #2b160a;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 30px;
+  letter-spacing: 3px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 8px;
+  background: #3b1f0f;
+  color: #f5deb3;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 20px;
+  background: #3b1f0f;
+  color: #f5deb3;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #5a2d17;
+}
+
+.ribbon {
+  position: absolute;
+  top: -25px;
+  right: 25px;
+  width: 55px;
+  height: 55px;
+  background: radial-gradient(circle at 30% 30%, #aa0000, #5a0000);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+  transition: transform 0.3s ease;
+}
+
+.ribbon:hover {
+  transform: scale(1.1);
+}
+
+.ribbon::after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 80px;
+  background: #5a0000;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 40px;
+  border-radius: 4px;
+}
+
+.open .scroll {
+  height: 620px;
+}
+
+.open .content {
+  opacity: 1;
+  transition-delay: 0.6s;
+}
+</style>
+</head>
+<body>
+
+<div class="scroll-wrapper" id="wrapper">
+  <div class="roll-top">SITank 2.0</div>
+
+  <div class="scroll">
+    <div class="content">
+      <h2>SITank 2.0</h2>
+      <p style="text-align:center; margin-bottom:15px; font-size:14px;">
+        Entrepreneurship Cell, SIT Nagpur<br>
+        📅 26th February 2026 &nbsp; | &nbsp; 🏆 Prize Pool ₹65,000
+      </p>
+
+      <input type="text" placeholder="Student Full Name" required />
+      <input type="email" placeholder="University Email (siu.edu.in)" required />
+      <input type="text" placeholder="Branch / Department" required />
+      <select style="width:100%; padding:12px; margin-bottom:15px; border:none; border-radius:8px; background:#3b1f0f; color:#f5deb3; font-size:16px;">
+        <option value="">Select Year</option>
+        <option>1st Year</option>
+        <option>2nd Year</option>
+        <option>3rd Year</option>
+        <option>4th Year</option>
+      </select>
+
+      <select style="width:100%; padding:12px; margin-bottom:20px; border:none; border-radius:8px; background:#3b1f0f; color:#f5deb3; font-size:16px;">
+        <option value="">Select Track</option>
+        <option>Startup Pitch</option>
+        <option>Business Model</option>
+        <option>Innovation Challenge</option>
+      </select>
+
+      <button id="registerBtn">Register for SITank</button>
+    </div>
+  </div>
+
+  <div class="roll-bottom"></div>
+  <div class="ribbon" id="ribbon" title="Click to open"></div>
+</div>
+
+<script>
+const ribbon = document.getElementById('ribbon');
+const wrapper = document.getElementById('wrapper');
+const registerBtn = document.getElementById('registerBtn');
+
+ribbon.addEventListener('click', () => {
+  wrapper.classList.toggle('open');
+});
+
+registerBtn.addEventListener('click', () => {
+  alert('🔥 Registration Submitted!');
+});
+</script>
+
+</body>
+</html>
