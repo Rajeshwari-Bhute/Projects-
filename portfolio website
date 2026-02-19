@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-md p-4 flex justify-between">
+        <h1 class="text-xl font-bold">My Portfolio</h1>
+        <div class="space-x-4">
+            <a href="#about" class="hover:text-blue-500">About</a>
+            <a href="#projects" class="hover:text-blue-500">Projects</a>
+            <a href="#contact" class="hover:text-blue-500">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="text-center py-16 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+        <h2 class="text-4xl font-bold mb-4">Hi, I'm Rajeshwari Bhute</h2>
+        <p class="text-lg">Frontend Developer | Learning Full Stack</p>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="p-10 max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold mb-4">About Me</h2>
+        <p>
+            I am a passionate web developer learning HTML ,Tailwind CSS and vibe coding
+            I love building modern websites and improving my skills every day.
+        </p>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="bg-gray-200 p-10">
+        <h2 class="text-3xl font-bold text-center mb-8">My Projects</h2>
+
+        <div class="flex flex-wrap justify-center gap-6">
+            
+            <div class="bg-white w-64 p-6 rounded-xl shadow-lg">
+                <h3 class="text-xl font-semibold mb-2">Online Store</h3>
+                <p class="text-gray-600 mb-4">A product listing website built using HTML and Tailwind.</p>
+                
+                
+                
+            </div>
+
+            <div class="bg-white w-64 p-6 rounded-xl shadow-lg">
+                <h3 class="text-xl font-semibold mb-2">Portfolio Website</h3>
+                <p class="text-gray-600 mb-4">A personal portfolio design project.</p>
+                
+                
+                
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="p-10 max-w-4xl mx-auto text-center">
+        <h2 class="text-3xl font-bold mb-4">Contact Me</h2>
+        <p>Email: rajeshwari.bhute.batch2025@sitnagpur.siu.edu.in</p>
+        <p>Phone: +91 8888745941</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center p-4">
+        © 2026 Rajeshwari Bhute. All rights reserved.
+    </footer>
+
+</body>
+</html>
+
