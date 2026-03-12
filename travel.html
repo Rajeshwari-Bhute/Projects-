@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travel Story App</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:url("https://images.unsplash.com/photo-1501785888041-af3ef285b470") center/cover no-repeat;
+}
+
+.overlay{
+background:rgba(0,0,0,0.55);
+min-height:100vh;
+padding:30px;
+}
+
+/* login */
+
+.login-box{
+max-width:350px;
+margin:80px auto;
+background:white;
+padding:25px;
+border-radius:10px;
+text-align:center;
+}
+
+input, textarea{
+width:100%;
+padding:10px;
+margin-top:10px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+button{
+padding:10px 15px;
+margin-top:10px;
+border:none;
+background:#2193b0;
+color:white;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#176d82;
+}
+
+/* blog */
+
+#blog{
+display:none;
+}
+
+header{
+color:white;
+text-align:center;
+}
+
+.welcome{
+background:white;
+padding:15px;
+border-radius:10px;
+max-width:600px;
+margin:20px auto;
+text-align:center;
+}
+
+/* plus button */
+
+.add-btn{
+position:fixed;
+right:25px;
+bottom:25px;
+width:60px;
+height:60px;
+border-radius:50%;
+font-size:30px;
+background:#ff6b6b;
+color:white;
+border:none;
+cursor:pointer;
+}
+
+/* story */
+
+.story{
+background:white;
+padding:15px;
+border-radius:10px;
+margin:15px auto;
+max-width:600px;
+box-shadow:0 5px 15px rgba(0,0,0,0.2);
+animation:fade 0.5s;
+}
+
+.story img{
+width:100%;
+border-radius:8px;
+margin-top:10px;
+}
+
+@keyframes fade{
+from{opacity:0; transform:translateY(20px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+/* form */
+
+.form-popup{
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+background:white;
+padding:20px;
+border-radius:10px;
+width:300px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+<!-- LOGIN PAGE -->
+
+<div id="loginPage" class="login-box">
+
+<h2>Travel Blog Login</h2>
+
+<input id="username" placeholder="Username">
+<input id="email" placeholder="Email">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">Login / Sign Up</button>
+
+</div>
+
+<!-- BLOG PAGE -->
+
+<div id="blog">
+
+<header>
+<h1>🌍 Travel Stories</h1>
+<p>Share your adventures with the world</p>
+</header>
+
+<div id="welcomeMsg" class="welcome"></div>
+
+<div id="stories"></div>
+
+<button class="add-btn" onclick="openForm()">+</button>
+
+</div>
+
+<!-- STORY FORM -->
+
+<div id="storyForm" class="form-popup">
+
+<h3>Add Story</h3>
+
+<input id="title" placeholder="Title">
+<input id="location" placeholder="Location">
+<textarea id="desc" placeholder="Story description"></textarea>
+
+<input type="file" id="imageUpload">
+
+<button onclick="saveStory()">Upload Story</button>
+<button onclick="closeForm()">Cancel</button>
+
+</div>
+
+</div>
+
+<script>
+
+/* sample story */
+
+if(!localStorage.getItem("stories")){
+let sample=[{
+title:"My Trip to the Mountains",
+location:"Himachal Pradesh",
+desc:"I visited the beautiful mountains and enjoyed the cold weather, amazing views and peaceful nature.",
+img:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
+}];
+localStorage.setItem("stories",JSON.stringify(sample));
+}
+
+/* login */
+
+function login(){
+
+let user=document.getElementById("username").value;
+let email=document.getElementById("email").value;
+
+if(user=="" || email==""){
+alert("Enter username and email");
+return;
+}
+
+localStorage.setItem("user",user);
+
+document.getElementById("loginPage").style.display="none";
+document.getElementById("blog").style.display="block";
+
+document.getElementById("welcomeMsg").innerHTML=
+"<h3>Welcome "+user+" 👋</h3><p>Share your travel stories with everyone!</p>";
+
+loadStories();
+
+}
+
+/* open form */
+
+function openForm(){
+document.getElementById("storyForm").style.display="block";
+}
+
+function closeForm(){
+document.getElementById("storyForm").style.display="none";
+}
+
+/* save story */
+
+function saveStory(){
+
+let title=document.getElementById("title").value;
+let location=document.getElementById("location").value;
+let desc=document.getElementById("desc").value;
+let file=document.getElementById("imageUpload").files[0];
+
+if(!title || !location || !desc){
+alert("Fill all fields");
+return;
+}
+
+let reader=new FileReader();
+
+reader.onload=function(){
+
+let story={
+title:title,
+location:location,
+desc:desc,
+img:reader.result
+};
+
+let stories=JSON.parse(localStorage.getItem("stories"));
+stories.unshift(story);
+
+localStorage.setItem("stories",JSON.stringify(stories));
+
+closeForm();
+loadStories();
+
+};
+
+if(file){
+reader.readAsDataURL(file);
+}else{
+reader.onload();
+}
+
+}
+
+/* load stories */
+
+function loadStories(){
+
+let stories=JSON.parse(localStorage.getItem("stories"));
+let container=document.getElementById("stories");
+
+container.innerHTML="";
+
+stories.forEach(s=>{
+
+let div=document.createElement("div");
+div.className="story";
+
+div.innerHTML=`
+<h3>${s.title}</h3>
+<p><b>Location:</b> ${s.location}</p>
+<p>${s.desc}</p>
+${s.img ? `<img src="${s.img}">` : ""}
+`;
+
+container.appendChild(div);
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
