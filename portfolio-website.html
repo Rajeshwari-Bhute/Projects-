@@ -1,74 +1,374 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Portfolio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <title>Rajeshwari Portfolio</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      color: white;
+    }
+
+    body::before, body::after {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: rgba(0,255,200,0.2);
+      filter: blur(100px);
+      animation: move 10s infinite alternate;
+    }
+
+    body::after {
+      background: rgba(0,150,255,0.2);
+      top: 60%;
+      left: 60%;
+    }
+
+    @keyframes move {
+      from { transform: translate(0,0); }
+      to { transform: translate(100px, -100px); }
+    }
+
+    .box {
+      position: absolute;
+      backdrop-filter: blur(15px);
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0,255,200,0.4);
+      max-width: 500px;
+      display: none;
+      animation: fadeIn 1s ease;
+    }
+
+    #box1 { display: block; }
+
+    h1, h2 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    p {
+      margin-top: 15px;
+      line-height: 1.6;
+      color: #ddd;
+    }
+
+    a {
+      color: #00ffcc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  </style>
 </head>
 
-<body class="bg-gray-100 text-gray-800">
+<body>
 
-    <!-- Navbar -->
-    <nav class="bg-white shadow-md p-4 flex justify-between">
-        <h1 class="text-xl font-bold">My Portfolio</h1>
-        <div class="space-x-4">
-            <a href="#about" class="hover:text-blue-500">About</a>
-            <a href="#projects" class="hover:text-blue-500">Projects</a>
-            <a href="#contact" class="hover:text-blue-500">Contact</a>
-        </div>
-    </nav>
+<div class="box" id="box1">
+  <h1>👋 Hey, nice to meet you!</h1>
+</div>
 
-    <!-- Hero Section -->
-    <section class="text-center py-16 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-        <h2 class="text-4xl font-bold mb-4">Hi, I'm Rajeshwari Bhute</h2>
-        <p class="text-lg">Frontend Developer | Learning Full Stack</p>
-    </section>
+<div class="box" id="box2">
+  <h1>I’m Rajeshwari Bhute</h1>
+  <p>✨ Creative Web Designer with lots of ideas</p>
+</div>
 
-    <!-- About Section -->
-    <section id="about" class="p-10 max-w-4xl mx-auto">
-        <h2 class="text-3xl font-bold mb-4">About Me</h2>
-        <p>
-            I am a passionate web developer learning HTML ,Tailwind CSS and vibe coding
-            I love building modern websites and improving my skills every day.
-        </p>
-    </section>
+<div class="box" id="box3">
+  <h2>About Me</h2>
+  <p>
+    Hi, I’m a Computer Science student at Symbiosis Institute of Technology,Nagpur. 
+    I’m passionate about building creative and visually appealing websites. 
+    A curious and detail-oriented learner, I enjoy turning ideas into meaningful digital experiences.
+  </p>
+</div>
 
-    <!-- Projects Section -->
-    <section id="projects" class="bg-gray-200 p-10">
-        <h2 class="text-3xl font-bold text-center mb-8">My Projects</h2>
+<div class="box" id="box4">
+  <h2>🚀 Hackathons</h2>
+  <p>🏆 Greek for Greeks</p>
+  <p>🏆 IEEE</p>
+  <p>🏆 Abhyudaya 5.0</p>
+  <p>🏆 Sitank (Boardroom Battle)</p>
+</div>
 
-        <div class="flex flex-wrap justify-center gap-6">
-            
-            <div class="bg-white w-64 p-6 rounded-xl shadow-lg">
-                <h3 class="text-xl font-semibold mb-2">Online Store</h3>
-                <p class="text-gray-600 mb-4">A product listing website built using HTML and Tailwind.</p>
-                
-                
-                
-            </div>
+<div class="box" id="box5">
+  <h2>📞 Contact</h2>
+  <p>💻 <a href="https://github.com/Rajeshwari-Bhute" target="_blank">GitHub</a></p>
+  <p>🔗 <a href="https://www.linkedin.com/in/rajeshwari-bhute-298120370" target="_blank">LinkedIn</a></p>
+  <p>📧 rajeshwari.bhute.batch2025@sitnagpur.siu.edu.in</p>
+  <p>📱 8888745941</p>
+</div>
+<div class="box" id="box6">
+  <h1>🙏 Thank You!</h1>
+  <p>Thanks for visiting my portfolio 💙</p>
+  <p>Looking forward to connecting with you!</p>
+</div>
 
-            <div class="bg-white w-64 p-6 rounded-xl shadow-lg">
-                <h3 class="text-xl font-semibold mb-2">Portfolio Website</h3>
-                <p class="text-gray-600 mb-4">A personal portfolio design project.</p>
-                
-                
-                
-            </div>
 
-        </div>
-    </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="p-10 max-w-4xl mx-auto text-center">
-        <h2 class="text-3xl font-bold mb-4">Contact Me</h2>
-        <p>Email: rajeshwari.bhute.batch2025@sitnagpur.siu.edu.in</p>
-        <p>Phone: +91 8888745941</p>
-    </section>
+<script>
+window.onload = function() {
 
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white text-center p-4">
-        © 2026 Rajeshwari Bhute. All rights reserved.
-    </footer>
+  setTimeout(() => {
+    box1.style.display = "none";
+    box2.style.display = "block";
+  }, 3000);
+
+  setTimeout(() => {
+    box2.style.display = "none";
+    box3.style.display = "block";
+  }, 6000);
+
+  setTimeout(() => {
+    box3.style.display = "none";
+    box4.style.display = "block";
+  }, 9000);
+
+  setTimeout(() => {
+    box4.style.display = "none";
+    box5.style.display = "block";
+  }, 12000);
+
+  setTimeout(() => {
+    box5.style.display = "none";
+    box6.style.display = "block";
+  }, 15000);
+
+};
+</script>
+<script>
+window.onload = function() {
+
+  setTimeout(() => {
+    box1.style.display = "none";
+    box2.style.display = "block";
+  }, 3000);
+
+  setTimeout(() => {
+    box2.style.display = "none";
+    box3.style.display = "block";
+  }, 6000);
+
+  setTimeout(() => {
+    box3.style.display = "none";
+    box4.style.display = "block";
+  }, 9000);
+
+  setTimeout(() => {
+    box4.style.display = "none";
+    box5.style.display = "block";
+  }, 12000);
+
+  setTimeout(() => {
+    box5.style.display = "none";
+    box6.style.display = "block";
+  }, 15000);
+
+};
+</script>
+<script>
+window.onload = function() {
+
+  setTimeout(() => {
+    box1.style.display = "none";
+    box2.style.display = "block";
+  }, 3000);
+
+  setTimeout(() => {
+    box2.style.display = "none";
+    box3.style.display = "block";
+  }, 6000);
+
+  setTimeout(() => {
+    box3.style.display = "none";
+    box4.style.display = "block";
+  }, 9000);
+
+  setTimeout(() => {
+    box4.style.display = "none";
+    box5.style.display = "block";
+  }, 12000);
+
+  setTimeout(() => {
+    box5.style.display = "none";
+    box6.style.display = "block";
+  }, 15000);
+
+};
+</script>
+<script>
+window.onload = function() {
+
+  setTimeout(() => {
+    box1.style.display = "none";
+    box2.style.display = "block";
+  }, 3000);
+
+  setTimeout(() => {
+    box2.style.display = "none";
+    box3.style.display = "block";
+  }, 6000);
+
+  setTimeout(() => {
+    box3.style.display = "none";
+    box4.style.display = "block";
+  }, 9000);
+
+  setTimeout(() => {
+    box4.style.display = "none";
+    box5.style.display = "block";
+  }, 12000);
+
+  setTimeout(() => {
+    box5.style.display = "none";
+    box6.style.display = "block";
+  }, 15000);
+
+};
+</script>
+<script>
+window.onload = function() {
+
+  setTimeout(() => {
+    box1.style.display = "none";
+    box2.style.display = "block";
+  }, 3000);
+
+  setTimeout(() => {
+    box2.style.display = "none";
+    box3.style.display = "block";
+  }, 6000);
+
+  setTimeout(() => {
+    box3.style.display = "none";
+    box4.style.display = "block";
+  }, 9000);
+
+  setTimeout(() => {
+    box4.style.display = "none";
+    box5.style.display = "block";
+  }, 12000);
+
+  setTimeout(() => {
+    box5.style.display = "none";
+    box6.style.display = "block";
+  }, 15000);
+
+};
+</script>
+<script>
+window.onload = function() {
+
+  setTimeout(() => {
+    box1.style.display = "none";
+    box2.style.display = "block";
+  }, 3000);
+
+  setTimeout(() => {
+    box2.style.display = "none";
+    box3.style.display = "block";
+  }, 6000);
+
+  setTimeout(() => {
+    box3.style.display = "none";
+    box4.style.display = "block";
+  }, 9000);
+
+  setTimeout(() => {
+    box4.style.display = "none";
+    box5.style.display = "block";
+  }, 12000);
+
+  setTimeout(() => {
+    box5.style.display = "none";
+    box6.style.display = "block";
+  }, 15000);
+
+};
+</script>
+<script>
+window.onload = function() {
+
+  setTimeout(() => {
+    box1.style.display = "none";
+    box2.style.display = "block";
+  }, 3000);
+
+  setTimeout(() => {
+    box2.style.display = "none";
+    box3.style.display = "block";
+  }, 6000);
+
+  setTimeout(() => {
+    box3.style.display = "none";
+    box4.style.display = "block";
+  }, 9000);
+
+  setTimeout(() => {
+    box4.style.display = "none";
+    box5.style.display = "block";
+  }, 12000);
+
+  setTimeout(() => {
+    box5.style.display = "none";
+    box6.style.display = "block";
+  }, 15000);
+
+};
+</script>
+<script>
+window.onload = function() {
+
+  setTimeout(() => {
+    box1.style.display = "none";
+    box2.style.display = "block";
+  }, 3000);
+
+  setTimeout(() => {
+    box2.style.display = "none";
+    box3.style.display = "block";
+  }, 6000);
+
+  setTimeout(() => {
+    box3.style.display = "none";
+    box4.style.display = "block";
+  }, 9000);
+
+  setTimeout(() => {
+    box4.style.display = "none";
+    box5.style.display = "block";
+  }, 12000);
+
+  setTimeout(() => {
+    box5.style.display = "none";
+    box6.style.display = "block";
+  }, 15000);
+
+};
+</script>
+
+
+
 
 </body>
 </html>
-
