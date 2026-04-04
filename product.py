@@ -5,7 +5,38 @@ import { Input } from "@/components/ui/input";
 
 export default function SimpleMarketplace() {
   const [userType, setUserType] = useState(null);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState([
+  {
+    name: "Shoes",
+    price: "999",
+    image: "https://via.placeholder.com/150"
+  },
+  {
+    name: "Watch",
+    price: "1499",
+    image: "https://via.placeholder.com/150"
+  },
+  {
+    name: "Phone",
+    price: "12999",
+    image: "https://via.placeholder.com/150"
+  },
+  {
+    name: "Headphones",
+    price: "799",
+    image: "https://via.placeholder.com/150"
+  },
+  {
+    name: "Bag",
+    price: "499",
+    image: "https://via.placeholder.com/150"
+  },
+  {
+    name: "Sunglasses",
+    price: "299",
+    image: "https://via.placeholder.com/150"
+  }
+]);
   const [imagePreview, setImagePreview] = useState("");
   const [form, setForm] = useState({ name: "", price: "", image: "" });
 
