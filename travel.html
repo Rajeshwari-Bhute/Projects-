@@ -1,306 +1,344 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Travel Story App</title>
-
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WanderLog — Travel Blog</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-
-body{
-font-family:Arial;
-margin:0;
-background:url("https://images.unsplash.com/photo-1501785888041-af3ef285b470") center/cover no-repeat;
+:root {
+  --bg: #0a0a0a;
+  --bg2: #111111;
+  --bg3: #181818;
+  --card: #141414;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --accent: #e8a87c;
+  --accent2: #c97d52;
+  --text: #f0ece6;
+  --muted: #7a7570;
+  --muted2: #a09890;
 }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
 
-.overlay{
-background:rgba(0,0,0,0.55);
-min-height:100vh;
-padding:30px;
-}
+/* ── noise overlay ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:0.4;}
 
-/* login */
+/* ── navbar ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(10,10,10,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:62px;}
+.logo{font-family:'Playfair Display',serif;font-size:1.35rem;color:var(--accent);cursor:pointer;letter-spacing:0.5px;}
+.logo span{color:var(--text);font-style:italic;}
+.nav-links{display:flex;align-items:center;gap:6px;}
+.nav-btn{padding:8px 18px;border-radius:40px;border:none;cursor:pointer;font-size:13px;font-weight:500;font-family:'DM Sans',sans-serif;transition:all 0.2s;letter-spacing:0.2px;}
+.nb-ghost{background:transparent;color:var(--muted2);}
+.nb-ghost:hover{background:var(--bg3);color:var(--text);}
+.nb-accent{background:var(--accent);color:#0a0a0a;}
+.nb-accent:hover{background:#d49060;transform:translateY(-1px);}
+.nb-out{background:transparent;color:var(--muted);border:1px solid var(--border2);}
+.nb-out:hover{border-color:rgba(255,255,255,0.3);color:var(--text);}
+.role-badge{padding:5px 14px;border-radius:40px;font-size:11px;font-weight:500;letter-spacing:0.5px;text-transform:uppercase;}
+.rb-blogger{background:rgba(232,168,124,0.15);color:var(--accent);border:1px solid rgba(232,168,124,0.25);}
+.rb-viewer{background:rgba(100,160,255,0.1);color:#7ab4f5;border:1px solid rgba(100,160,255,0.2);}
 
-.login-box{
-max-width:350px;
-margin:80px auto;
-background:white;
-padding:25px;
-border-radius:10px;
-text-align:center;
-}
+/* ── login ── */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(232,168,124,0.08) 0%, transparent 70%);}
+.login-card{background:var(--card);border:1px solid var(--border2);border-radius:24px;padding:3rem 2.5rem;width:100%;max-width:420px;text-align:center;}
+.login-glyph{font-size:2.8rem;margin-bottom:1rem;}
+.login-title{font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:0.3rem;}
+.login-title span{color:var(--accent);font-style:italic;}
+.login-sub{color:var(--muted);font-size:14px;margin-bottom:2.2rem;}
+.role-btn{width:100%;padding:16px 20px;border-radius:14px;border:1px solid var(--border2);background:var(--bg3);cursor:pointer;font-size:14px;font-weight:500;color:var(--text);display:flex;align-items:center;gap:16px;margin-bottom:12px;transition:all 0.2s;text-align:left;font-family:'DM Sans',sans-serif;}
+.role-btn:hover{border-color:var(--accent);background:rgba(232,168,124,0.07);transform:translateX(4px);}
+.role-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.role-desc{font-size:12px;font-weight:300;color:var(--muted);display:block;margin-top:2px;}
 
-input, textarea{
-width:100%;
-padding:10px;
-margin-top:10px;
-border-radius:6px;
-border:1px solid #ccc;
-}
+/* ── pages ── */
+.page{display:none;padding:2.5rem 2rem;max-width:1100px;margin:0 auto;}
+.page.active{display:block;}
+.page-header{margin-bottom:2.2rem;}
+.page-title{font-family:'Playfair Display',serif;font-size:2rem;margin-bottom:0.3rem;}
+.page-title em{color:var(--accent);font-style:italic;}
+.page-sub{color:var(--muted);font-size:14px;}
 
-button{
-padding:10px 15px;
-margin-top:10px;
-border:none;
-background:#2193b0;
-color:white;
-border-radius:6px;
-cursor:pointer;
-}
+/* ── grid ── */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;}
+.blog-card{background:var(--card);border:1px solid var(--border);border-radius:18px;overflow:hidden;cursor:pointer;transition:transform 0.22s,border-color 0.22s,box-shadow 0.22s;}
+.blog-card:hover{transform:translateY(-5px);border-color:var(--border2);box-shadow:0 16px 40px rgba(0,0,0,0.4);}
+.card-img{width:100%;height:200px;object-fit:cover;display:block;background:var(--bg3);}
+.card-img-ph{width:100%;height:200px;background:linear-gradient(135deg,#1e1a17,#2a2018);display:flex;align-items:center;justify-content:center;font-size:3rem;}
+.card-body{padding:1.2rem 1.4rem 1.5rem;}
+.card-tag{display:inline-block;background:rgba(232,168,124,0.12);color:var(--accent);font-size:10px;font-weight:500;padding:3px 10px;border-radius:40px;margin-bottom:10px;letter-spacing:1px;text-transform:uppercase;}
+.card-title{font-family:'Playfair Display',serif;font-size:1.1rem;margin-bottom:6px;line-height:1.35;}
+.card-dest{font-size:12px;color:var(--muted);margin-bottom:14px;}
+.read-btn{width:100%;padding:10px;border:1px solid var(--border2);border-radius:40px;background:transparent;color:var(--text);font-size:13px;font-weight:500;cursor:pointer;transition:all 0.18s;font-family:'DM Sans',sans-serif;}
+.read-btn:hover{background:var(--accent);border-color:var(--accent);color:#0a0a0a;}
 
-button:hover{
-background:#176d82;
-}
+/* ── story ── */
+.story-wrap{max-width:740px;margin:0 auto;}
+.back-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 20px;border-radius:40px;border:1px solid var(--border2);background:transparent;color:var(--muted2);font-size:13px;font-weight:500;cursor:pointer;margin-bottom:1.8rem;transition:all 0.18s;font-family:'DM Sans',sans-serif;}
+.back-btn:hover{color:var(--text);border-color:rgba(255,255,255,0.3);}
+.story-hero{width:100%;height:360px;object-fit:cover;border-radius:18px;display:block;margin-bottom:1.8rem;}
+.story-hero-ph{width:100%;height:360px;border-radius:18px;background:linear-gradient(135deg,#1e1a17,#2a2018);display:flex;align-items:center;justify-content:center;font-size:5rem;margin-bottom:1.8rem;}
+.story-title{font-family:'Playfair Display',serif;font-size:2.2rem;line-height:1.2;margin-bottom:0.4rem;}
+.story-meta{color:var(--muted);font-size:13px;margin-bottom:2rem;}
+.story-meta span{color:var(--accent);}
+.day-block{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem 1.8rem;margin-bottom:1.2rem;}
+.day-label{font-size:10px;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;}
+.day-text{font-size:15px;line-height:1.8;color:var(--muted2);font-weight:300;}
+.tip-block{background:rgba(232,168,124,0.06);border:1px solid rgba(232,168,124,0.2);border-radius:14px;padding:1.2rem 1.8rem;margin-top:0.5rem;}
+.tip-label{font-size:10px;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;}
 
-/* blog */
+/* ── form ── */
+.form-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2.2rem;max-width:680px;margin:0 auto;}
+.step-bar{display:flex;gap:6px;margin-bottom:2rem;}
+.step-dot{height:3px;flex:1;border-radius:4px;background:var(--bg3);transition:background 0.3s;}
+.step-dot.done{background:var(--accent);}
+.form-group{margin-bottom:1.4rem;}
+.form-label{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px;}
+.form-input{width:100%;padding:13px 16px;border:1px solid var(--border2);border-radius:12px;font-size:15px;color:var(--text);background:var(--bg3);transition:border-color 0.2s;outline:none;resize:vertical;font-family:'DM Sans',sans-serif;font-weight:300;}
+.form-input::placeholder{color:var(--muted);}
+.form-input:focus{border-color:var(--accent);}
+.form-input.err{border-color:#d45;}
+.err-msg{color:#e07;font-size:12px;margin-top:5px;}
+.submit-btn{width:100%;padding:14px;border-radius:40px;border:none;background:var(--accent);color:#0a0a0a;font-size:15px;font-weight:500;cursor:pointer;transition:opacity 0.18s,transform 0.15s;margin-top:0.5rem;font-family:'DM Sans',sans-serif;letter-spacing:0.3px;}
+.submit-btn:hover{opacity:0.88;transform:translateY(-1px);}
 
-#blog{
-display:none;
-}
+/* ── search ── */
+.search-bar{display:flex;gap:10px;margin-bottom:1.8rem;}
+.search-input{flex:1;padding:12px 18px;border:1px solid var(--border2);border-radius:40px;font-size:14px;color:var(--text);background:var(--bg3);outline:none;font-family:'DM Sans',sans-serif;}
+.search-input:focus{border-color:var(--accent);}
+.search-btn{padding:12px 24px;border-radius:40px;border:none;background:var(--accent);color:#0a0a0a;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.no-blogs{text-align:center;padding:5rem 2rem;color:var(--muted);}
+.no-blogs .nb-icon{font-size:4rem;margin-bottom:1rem;}
 
-header{
-color:white;
-text-align:center;
-}
-
-.welcome{
-background:white;
-padding:15px;
-border-radius:10px;
-max-width:600px;
-margin:20px auto;
-text-align:center;
-}
-
-/* plus button */
-
-.add-btn{
-position:fixed;
-right:25px;
-bottom:25px;
-width:60px;
-height:60px;
-border-radius:50%;
-font-size:30px;
-background:#ff6b6b;
-color:white;
-border:none;
-cursor:pointer;
-}
-
-/* story */
-
-.story{
-background:white;
-padding:15px;
-border-radius:10px;
-margin:15px auto;
-max-width:600px;
-box-shadow:0 5px 15px rgba(0,0,0,0.2);
-animation:fade 0.5s;
-}
-
-.story img{
-width:100%;
-border-radius:8px;
-margin-top:10px;
-}
-
-@keyframes fade{
-from{opacity:0; transform:translateY(20px);}
-to{opacity:1; transform:translateY(0);}
-}
-
-/* form */
-
-.form-popup{
-display:none;
-position:fixed;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-background:white;
-padding:20px;
-border-radius:10px;
-width:300px;
-}
-
+/* ── animations ── */
+@keyframes fadeIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.blog-card,.form-card,.story-wrap,.login-card{animation:fadeIn 0.4s ease both;}
 </style>
 </head>
-
 <body>
 
-<div class="overlay">
-
-<!-- LOGIN PAGE -->
-
-<div id="loginPage" class="login-box">
-
-<h2>Travel Blog Login</h2>
-
-<input id="username" placeholder="Username">
-<input id="email" placeholder="Email">
-<input id="password" type="password" placeholder="Password">
-
-<button onclick="login()">Login / Sign Up</button>
-
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-glyph">✈️</div>
+    <div class="login-title">Wander<span>Log</span></div>
+    <div class="login-sub">Your travel stories, beautifully told</div>
+    <button class="role-btn" onclick="login('blogger')">
+      <div class="role-icon" style="background:rgba(232,168,124,0.12);">✍️</div>
+      <div>Blogger<span class="role-desc">Write & share your travel stories</span></div>
+    </button>
+    <button class="role-btn" onclick="login('viewer')">
+      <div class="role-icon" style="background:rgba(100,160,255,0.1);">🗺️</div>
+      <div>Viewer<span class="role-desc">Explore stories from around the world</span></div>
+    </button>
+  </div>
 </div>
 
-<!-- BLOG PAGE -->
+<!-- APP -->
+<div id="app" style="display:none;">
+  <nav>
+    <div class="logo" onclick="goPage('home')">Wander<span>Log</span></div>
+    <div class="nav-links">
+      <button class="nav-btn nb-ghost" onclick="goPage('home')">Home</button>
+      <button class="nav-btn nb-ghost" onclick="goPage('search')">Search</button>
+      <button id="add-nav-btn" class="nav-btn nb-accent" onclick="goPage('add')" style="display:none;">+ Add Blog</button>
+      <span id="role-badge" class="role-badge"></span>
+      <button class="nav-btn nb-out" onclick="logout()">Logout</button>
+    </div>
+  </nav>
 
-<div id="blog">
+  <!-- HOME -->
+  <div id="page-home" class="page active">
+    <div class="page-header">
+      <div class="page-title">Explore <em>Journeys</em></div>
+      <div class="page-sub">Real stories from real travellers around the world 🌍</div>
+    </div>
+    <div id="blog-grid" class="blog-grid"></div>
+    <div id="no-blogs" class="no-blogs" style="display:none;">
+      <div class="nb-icon">🧳</div>
+      <div style="font-size:1.1rem;font-weight:500;">No stories yet. Be the first!</div>
+    </div>
+  </div>
 
-<header>
-<h1>🌍 Travel Stories</h1>
-<p>Share your adventures with the world</p>
-</header>
+  <!-- STORY -->
+  <div id="page-story" class="page">
+    <div class="story-wrap" id="story-content"></div>
+  </div>
 
-<div id="welcomeMsg" class="welcome"></div>
+  <!-- ADD -->
+  <div id="page-add" class="page">
+    <div class="page-header">
+      <div class="page-title">New Travel <em>Story</em></div>
+      <div class="page-sub">Share your adventure with the world ✍️</div>
+    </div>
+    <div class="form-card">
+      <div class="step-bar">
+        <div class="step-dot" id="sd1"></div>
+        <div class="step-dot" id="sd2"></div>
+        <div class="step-dot" id="sd3"></div>
+        <div class="step-dot" id="sd4"></div>
+        <div class="step-dot" id="sd5"></div>
+        <div class="step-dot" id="sd6"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Blog Title *</label>
+        <input id="f-title" class="form-input" type="text" placeholder="e.g. Three Days in Bali..."/>
+        <div class="err-msg" id="e-title"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Destination *</label>
+        <input id="f-dest" class="form-input" type="text" placeholder="e.g. Santorini, Greece"/>
+        <div class="err-msg" id="e-dest"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Cover Image URL (optional)</label>
+        <input id="f-img" class="form-input" type="url" placeholder="https://images.unsplash.com/..."/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Day 1 Story *</label>
+        <textarea id="f-day1" class="form-input" rows="3" placeholder="What happened on your first day?"></textarea>
+        <div class="err-msg" id="e-day1"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Day 2 Story *</label>
+        <textarea id="f-day2" class="form-input" rows="3" placeholder="Describe day two of your journey..."></textarea>
+        <div class="err-msg" id="e-day2"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Day 3 Story *</label>
+        <textarea id="f-day3" class="form-input" rows="3" placeholder="How did the adventure end?"></textarea>
+        <div class="err-msg" id="e-day3"></div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Travel Tip (optional)</label>
+        <input id="f-tip" class="form-input" type="text" placeholder="A tip for other visitors..."/>
+      </div>
+      <button class="submit-btn" onclick="submitBlog()">Publish Story ✈️</button>
+    </div>
+  </div>
 
-<div id="stories"></div>
-
-<button class="add-btn" onclick="openForm()">+</button>
-
-</div>
-
-<!-- STORY FORM -->
-
-<div id="storyForm" class="form-popup">
-
-<h3>Add Story</h3>
-
-<input id="title" placeholder="Title">
-<input id="location" placeholder="Location">
-<textarea id="desc" placeholder="Story description"></textarea>
-
-<input type="file" id="imageUpload">
-
-<button onclick="saveStory()">Upload Story</button>
-<button onclick="closeForm()">Cancel</button>
-
-</div>
-
+  <!-- SEARCH -->
+  <div id="page-search" class="page">
+    <div class="page-header">
+      <div class="page-title">Search <em>Stories</em></div>
+      <div class="page-sub">Find blogs by title, destination, or author</div>
+    </div>
+    <div class="search-bar">
+      <input id="search-input" class="search-input" placeholder="e.g. Japan, beach, adventure..." onkeydown="if(event.key==='Enter')doSearch()"/>
+      <button class="search-btn" onclick="doSearch()">Search</button>
+    </div>
+    <div id="search-results" class="blog-grid"></div>
+    <div id="search-msg" style="color:var(--muted);font-size:14px;text-align:center;padding:2rem;display:none;"></div>
+  </div>
 </div>
 
 <script>
+let role = null;
+let nextId = 4;
+let blogs = [
+  {id:1,title:"Sunsets & Secrets of Santorini",dest:"Santorini, Greece",author:"Rahul Mehta",img:"https://images.unsplash.com/photo-1613395877344-13d4a8e0d49e?w=600&q=80",day1:"Arrived in Oia just as the ferry docked at Athinios port. The white-washed walls gleamed under the afternoon sun. Checked into a cliffside cave hotel — the view from the balcony was simply surreal. Spent the evening watching the famous Santorini sunset with a glass of local Assyrtiko wine.",day2:"Rented a quad bike and explored the caldera rim. Stopped at Fira, the island's capital, for a traditional Greek breakfast of spanakopita and strong coffee. Hiked from Fira to Oia along the cliffside path — absolutely breathtaking views the entire way.",day3:"Took a catamaran cruise around the volcanic islands. Swam in hot springs with rusty-red water, snorkeled near the black sand beach, and had a BBQ lunch on deck. Ended with fresh seafood at a taverna in Ammoudi Bay, watching fishing boats bob in the harbour.",tip:"Book sunset spots in Oia at least 2 hours early!"},
+  {id:2,title:"Lost in the Temples of Kyoto",dest:"Kyoto, Japan",author:"Anita Rao",img:"https://images.unsplash.com/photo-1492571350019-22de08371fd3?w=600&q=80",day1:"Arrived at Kyoto Station and immediately felt transported to another era. Strolled through Maruyama Park as cherry blossoms drifted in the breeze. Attended an authentic tea ceremony hosted by a local family — a slow, meditative experience unlike anything else.",day2:"Woke at 5am to visit Fushimi Inari before the crowds arrived. Thousands of vermilion torii gates winding up the mountain — pure magic in the early mist. Spent the afternoon cycling through the Philosopher's Path.",day3:"Explored Arashiyama — the bamboo grove, the monkey park, and a peaceful boat ride on the Oi River. Had a kaiseki lunch at a centuries-old ryokan. Evening: wandered Nishiki Market sampling pickled plums and fresh mochi.",tip:"Visit Fushimi Inari before 6am — the mist and silence are magical."},
+  {id:3,title:"Chasing Northern Lights in Iceland",dest:"Iceland",author:"Priya Sharma",img:"https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80",day1:"Landed in Reykjavik under a sky of steel grey. Drove straight to the Golden Circle. Saw Gullfoss waterfall thundering through a glacial canyon and stood at the rift between tectonic plates at Þingvellir. Soaked in the famous Blue Lagoon as snowflakes melted into the milky water.",day2:"Drove the South Coast. Black sand beaches at Reynisfjara with basalt columns rising like organ pipes. Walked behind the Seljalandsfoss waterfall. Late at night, drove away from town lights and waited in the cold — then ribbons of green aurora lit up the entire sky.",day3:"Hiked on Sólheimajökull glacier with crampons and an ice axe. Neon blue crevasses, ancient ice carved by time. Ended at Skógafoss waterfall for a rainbow-lit goodbye. Drove back through lava fields, eating lamb soup at a roadside gas station.",tip:"Download the Aurora Forecast app and stay up past midnight!"}
+];
 
-/* sample story */
-
-if(!localStorage.getItem("stories")){
-let sample=[{
-title:"My Trip to the Mountains",
-location:"Himachal Pradesh",
-desc:"I visited the beautiful mountains and enjoyed the cold weather, amazing views and peaceful nature.",
-img:"https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
-}];
-localStorage.setItem("stories",JSON.stringify(sample));
+function login(r){
+  role=r;
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('add-nav-btn').style.display = r==='blogger'?'':'none';
+  const badge=document.getElementById('role-badge');
+  badge.className='role-badge '+(r==='blogger'?'rb-blogger':'rb-viewer');
+  badge.textContent=r==='blogger'?'✍️ Blogger':'🗺️ Viewer';
+  renderGrid();
+  goPage('home');
 }
 
-/* login */
-
-function login(){
-
-let user=document.getElementById("username").value;
-let email=document.getElementById("email").value;
-
-if(user=="" || email==""){
-alert("Enter username and email");
-return;
+function logout(){
+  role=null;
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
 }
 
-localStorage.setItem("user",user);
-
-document.getElementById("loginPage").style.display="none";
-document.getElementById("blog").style.display="block";
-
-document.getElementById("welcomeMsg").innerHTML=
-"<h3>Welcome "+user+" 👋</h3><p>Share your travel stories with everyone!</p>";
-
-loadStories();
-
+function goPage(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  if(p==='home') renderGrid();
 }
 
-/* open form */
-
-function openForm(){
-document.getElementById("storyForm").style.display="block";
+function renderGrid(list, containerId){
+  const id=containerId||'blog-grid';
+  const container=document.getElementById(id);
+  const data=list||blogs;
+  container.innerHTML='';
+  if(!containerId){
+    document.getElementById('no-blogs').style.display=data.length?'none':'block';
+  }
+  data.forEach(b=>{
+    const card=document.createElement('div');
+    card.className='blog-card';
+    card.innerHTML=`
+      ${b.img?`<img class="card-img" src="${b.img}" alt="${b.title}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/><div class="card-img-ph" style="display:none">🌍</div>`:`<div class="card-img-ph">🌍</div>`}
+      <div class="card-body">
+        <span class="card-tag">3-Day Journey</span>
+        <div class="card-title">${b.title}</div>
+        <div class="card-dest">📍 ${b.dest}${b.author?' · by '+b.author:''}</div>
+        <button class="read-btn" onclick="readBlog(${b.id})">Read Story →</button>
+      </div>`;
+    card.onclick=()=>readBlog(b.id);
+    container.appendChild(card);
+  });
 }
 
-function closeForm(){
-document.getElementById("storyForm").style.display="none";
+function readBlog(id){
+  const b=blogs.find(x=>x.id===id);
+  if(!b)return;
+  const el=document.getElementById('story-content');
+  el.innerHTML=`
+    <button class="back-btn" onclick="goPage('home')">← Back to Explore</button>
+    ${b.img?`<img class="story-hero" src="${b.img}" alt="${b.title}" onerror="this.style.display='none';this.nextSibling.style.display='flex'"/><div class="story-hero-ph" style="display:none">🌍</div>`:`<div class="story-hero-ph">🌍</div>`}
+    <div class="story-title">${b.title}</div>
+    <div class="story-meta">📍 <span>${b.dest}</span>${b.author?' &nbsp;·&nbsp; ✍️ '+b.author:''} &nbsp;·&nbsp; ✈️ 3-Day Journal</div>
+    <div class="day-block"><div class="day-label">Day 1</div><div class="day-text">${b.day1}</div></div>
+    <div class="day-block"><div class="day-label">Day 2</div><div class="day-text">${b.day2}</div></div>
+    <div class="day-block"><div class="day-label">Day 3</div><div class="day-text">${b.day3}</div></div>
+    ${b.tip?`<div class="tip-block"><div class="tip-label">✨ Travel Tip</div><div class="day-text">${b.tip}</div></div>`:''}
+  `;
+  goPage('story');
 }
 
-/* save story */
+function updateStepBar(){
+  const fields=['f-title','f-dest','f-img','f-day1','f-day2','f-day3'];
+  fields.forEach((id,i)=>{
+    document.getElementById('sd'+(i+1)).classList.toggle('done',!!document.getElementById(id).value.trim());
+  });
+}
+document.addEventListener('input',updateStepBar);
 
-function saveStory(){
-
-let title=document.getElementById("title").value;
-let location=document.getElementById("location").value;
-let desc=document.getElementById("desc").value;
-let file=document.getElementById("imageUpload").files[0];
-
-if(!title || !location || !desc){
-alert("Fill all fields");
-return;
+function submitBlog(){
+  const v=(id)=>document.getElementById(id).value.trim();
+  const setErr=(id,msg)=>{const el=document.getElementById('e-'+id);if(el){el.textContent=msg;}document.getElementById('f-'+id).classList.toggle('err',!!msg);};
+  let ok=true;
+  [['title','Title'],['dest','Destination'],['day1','Day 1 story'],['day2','Day 2 story'],['day3','Day 3 story']].forEach(([k,l])=>{
+    if(!v(k)){setErr(k,l+' is required.');ok=false;}else{setErr(k,'');}
+  });
+  if(!ok)return;
+  blogs.push({id:nextId++,title:v('title'),dest:v('dest'),author:'You',img:v('img'),day1:v('day1'),day2:v('day2'),day3:v('day3'),tip:v('tip')});
+  ['title','dest','img','day1','day2','day3','tip'].forEach(k=>{document.getElementById('f-'+k).value='';});
+  updateStepBar();
+  goPage('home');
 }
 
-let reader=new FileReader();
-
-reader.onload=function(){
-
-let story={
-title:title,
-location:location,
-desc:desc,
-img:reader.result
-};
-
-let stories=JSON.parse(localStorage.getItem("stories"));
-stories.unshift(story);
-
-localStorage.setItem("stories",JSON.stringify(stories));
-
-closeForm();
-loadStories();
-
-};
-
-if(file){
-reader.readAsDataURL(file);
-}else{
-reader.onload();
+function doSearch(){
+  const q=document.getElementById('search-input').value.trim().toLowerCase();
+  const msg=document.getElementById('search-msg');
+  const res=document.getElementById('search-results');
+  if(!q){msg.style.display='block';msg.textContent='Please enter a search term.';res.innerHTML='';return;}
+  const found=blogs.filter(b=>b.title.toLowerCase().includes(q)||b.dest.toLowerCase().includes(q)||(b.author&&b.author.toLowerCase().includes(q))||(b.day1+b.day2+b.day3).toLowerCase().includes(q));
+  if(found.length){msg.style.display='none';renderGrid(found,'search-results');}
+  else{res.innerHTML='';msg.style.display='block';msg.textContent=`No stories found for "${q}". Try a different keyword.`;}
 }
-
-}
-
-/* load stories */
-
-function loadStories(){
-
-let stories=JSON.parse(localStorage.getItem("stories"));
-let container=document.getElementById("stories");
-
-container.innerHTML="";
-
-stories.forEach(s=>{
-
-let div=document.createElement("div");
-div.className="story";
-
-div.innerHTML=`
-<h3>${s.title}</h3>
-<p><b>Location:</b> ${s.location}</p>
-<p>${s.desc}</p>
-${s.img ? `<img src="${s.img}">` : ""}
-`;
-
-container.appendChild(div);
-
-});
-
-}
-
 </script>
-
 </body>
 </html>
